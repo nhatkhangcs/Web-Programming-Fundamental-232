@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Test_in_pink1</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </head>
+
+        <style>
+            .console {
+                font-family: 'Courier New', Courier, monospace;
+                font-size: medium;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+        <div class="container pt-4">
+            <h2>WEBSITE FOR TESTING "STUDY IN PINK 1" - PROGRAMMING FUNDAMENTAL SEMESTER 232</h2>
+            <li>Copy the code from <strong>study_in_pink1.cpp</strong> and paste it into your IDE.</li>
+            <li>Copy the code from <strong>study_in_pink1.h</strong> and paste it into your IDE.</li>
+            <li>Click "Run" to compile and execute the code.</li>
+            <hr>
+            <div class="hstack gap-2 mb-2" style="height: 80vh; width: 100%;">
+                <div class="hstack gap-2" style="width: 100%;">
+                    <div id="implementation" style="width: 100%; height: 100%; border: 1px solid grey;" hidden></div>
+                    <div id="header" style="width: 100%; height: 100%; border: 1px solid grey;"></div>
+                    <div style="display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; margin: auto; row-gap: 4pt;">
+                    
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: row; align-items: center; column-gap: 4pt;">
+                            
+                            <textarea class="form-control console" id="testcase" readonly></textarea>
+                            <textarea class="form-control console" id="expected" readonly></textarea>
+                            <textarea class="form-control console" id="got" readonly></textarea>
+                        </div>
+                        <textarea id="consoleout" class="form-control console" style="height:25%" readonly></textarea>
+                    </div>
+                    
+                </div>
+                
+               
+            </div>
+            <div class="hstack gap-2 align-middle" style="align-items: center;">
+                <select id="choiceFile" onchange="change(this)" class="form-select w-25">
+                    <option value="study_in_pink1.h">study_in_pink1.h</option>
+                    <option value="study_in_pink1.cpp">study_in_pink1.cpp</option>
+                </select>
+                <button type="button" class="btn btn-primary" onclick="compileRun()">Run</button>
+                <span id="status"></span>
+            </div>
+            <p class="text-center mt-4">
+                Made by <a href="https://www.facebook.com/nguyenthebinh288">Bình</a>, <a href="https://www.facebook.com/Christeriousity/">Khang</a> and <a href="https://www.facebook.com/oscarism.cs.2401">Danh</a> in 2024. The website is for reference purposes only, the author assumes no responsibility under any circumstances..
+            </p>
+           
+        </div>
+      
+		<!-- OR ANY OTHER AMD LOADER HERE INSTEAD OF loader.js -->
+        <script src="dist/import.js"></script>
+        <script src="dist/compiler.js"></script>
+		<script src="dist/monaco-editor-0.46.0/package/min/vs/loader.js"></script>
+		<script>
+           
+            async function updateUI() {
+                return new Promise(resolve => setTimeout(resolve, 30));
+            }
+            async function fetchText(url) {
+                return (await fetch(url)).text();
+            }
+            
+            let compilerLoading = new Promise(async resolve => {
+                document.getElementById("status").innerText = 'Downloading files...';
+                
+                
+                document.getElementById("status").innerText = 'Ready';
+                resolve();
+            })
+            let ImplementationEditor;
+            let HeaderEditor;
+			require.config({ paths: { vs: 'dist/monaco-editor-0.46.0/package/min/vs' } });
+
+            (async function() {
+                const [imp, head] = [await fetchText("initial/study_in_pink1.cpp"), await fetchText("initial/study_in_pink1.h")];
+                require(['vs/editor/editor.main'], function () {
+                    ImplementationEditor = monaco.editor.create(document.getElementById('implementation'), {
+                        value: imp,
+                        language: 'cpp',
+                        automaticLayout: true,
+                        theme: "vs"
+                    });
+                    HeaderEditor = monaco.editor.create(document.getElementById('header'), {
+                        value: head,
+                        language: 'cpp',
+                        
+                        automaticLayout: true,
+                        theme: "vs"
+                    });
+                });
+            })();
+
+			
+            
+
+            async function change(e) {
+                if (e.value === 'study_in_pink1.cpp') {
+                    document.getElementById("implementation").removeAttribute('hidden');
+                    document.getElementById("header").setAttribute('hidden', '');
+                }
+                else {
+                    
+                    document.getElementById("header").removeAttribute('hidden');
+                    document.getElementById("implementation").setAttribute('hidden', '');
+                }
+            }
+            let working = false;
+
+            
+
+            async function compileRun() {
+                if (working) return;
+                working = true;
+                document.getElementById("status").innerText = 'Compiling';
+                document.getElementById("consoleout").value = '';
+                await updateUI();
+                const compiler = await Module({
+                    print:    v => document.getElementById("consoleout").value += v + '\n',
+                    printErr: v => document.getElementById("consoleout").value += v + '\n'
+                });
+
+                for (const v of [
+                    "main.h",
+                    "main.cpp",
+                    "answer_get.hpp"
+                ]) {
+
+                    compiler.FS.writeFile(v, await fetchText(`tester/${v}`), { encoding: "utf8" })
+                }
+
+                for (const v of [
+                    "answer_get.o"
+                ]) {
+
+                    compiler.FS.writeFile(v, new Uint8Array(await (await fetch(`tester/${v}`)).arrayBuffer()), { encoding: "binary" })
+                }
+
+                
+                compiler.FS.writeFile("study_in_pink1.cpp", ImplementationEditor.getValue(), { encoding: "utf8" });
+                compiler.FS.writeFile("study_in_pink1.h", HeaderEditor.getValue(), { encoding: "utf8" });
+                compiler.callMain(["answer_get.o"]);
+                let wasm_binary;
+                try {
+                    wasm_binary = compiler.FS.readFile("main.wasm", { encoding: "binary" });
+                    if (document.getElementById("consoleout").value) throw "error";
+                }
+                catch (e) {
+                    document.getElementById("status").innerText = 'Compile failed';
+                    working = false;
+                    return;
+                }
+                document.getElementById("status").innerText = 'Running';
+                await updateUI();
+                await load_wasm(wasm_binary);
+                document.getElementById("status").innerText = 'Ready';
+                working = false;
+            }
+		</script>
+    </body>
+
+</html>
