@@ -2,7 +2,7 @@
 
 async function load_wasm(wasm_binary) {
     return new Promise((resolve) => {
-        const worker = new Worker('dist/worker.js');
+        let worker = new Worker('dist/worker.js');
         worker.onmessage = ({ data }) => {
             const [id, message, value] = data;
             const element = document.getElementById(id);
@@ -17,7 +17,7 @@ async function load_wasm(wasm_binary) {
                         break;
                     case 'final':
                         textArea.value += value;
-                        worker.terminate();
+                        worker = undefined;
                         resolve('Done');
                 }
             }

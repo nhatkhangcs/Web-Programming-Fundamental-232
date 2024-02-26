@@ -108,7 +108,8 @@ onmessage = async (ev) => {
         memory = instance.exports.memory;
         instance.exports._start();
     } catch (e) {
-        self.close(); // hopefully prevent memory leak?
         postMessage([fileIDs[1], "final", `\nExited with code: ${e}`]);
+    } finally {
+        self.close(); // hopefully prevent memory leak?
     }
 };
