@@ -35,30 +35,21 @@ TestCase gentask123() {
 template<typename Task_t>
 Task1Ret runTask1(TestCase test, Task_t Task) {
   int ret = Task(test.EXP1, test.EXP2, test.E1);
-  if (ret == -99) {
-    return { ret};
-  }
-  else return { ret, test.EXP1, test.EXP2 };
+  return { ret, test.EXP1, test.EXP2 };
 }
 
 
 template<typename Task_t>
 Task2Ret runTask2(TestCase test, Task_t Task) {
   int ret = Task(test.HP1, test.EXP1, test.M1, test.E2);
-  if (ret == -99) {
-    return { ret};
-  }
-  else return { ret, test.HP1, test.EXP1, test.M1 };
+  return { ret, test.HP1, test.EXP1, test.M1 };
 }
 
 
 template<typename Task_t>
 Task3Ret runTask3(TestCase test, Task_t Task) {
   int ret = Task(test.HP1, test.EXP1, test.HP2, test.EXP2, test.E3);
-    if (ret == -99) {
-    return { ret};
-  }
-  else return { ret, test.HP1, test.EXP1, test.HP2, test.EXP2};
+  return { ret, test.HP1, test.EXP1, test.HP2, test.EXP2};
 }
 
 
