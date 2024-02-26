@@ -17,6 +17,7 @@ async function load_wasm(wasm_binary) {
                         break;
                     case 'final':
                         textArea.value += value;
+                        worker.terminate();
                         worker = undefined;
                         resolve('Done');
                 }
