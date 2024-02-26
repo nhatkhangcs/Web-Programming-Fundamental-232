@@ -107,8 +107,8 @@ onmessage = async (ev) => {
         const { instance } = await WebAssembly.instantiate(wasm_binary, imports);
         memory = instance.exports.memory;
         instance.exports._start();
-    }
-    catch (e) {
+    } catch (e) {
+        self.close(); // hopefully prevent memory leak?
         postMessage([fileIDs[1], "final", `\nExited with code: ${e}`]);
     }
 };
