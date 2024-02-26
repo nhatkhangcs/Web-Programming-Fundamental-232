@@ -57,7 +57,7 @@
       
 		<!-- OR ANY OTHER AMD LOADER HERE INSTEAD OF loader.js -->
         <script src="dist/import.js"></script>
-        <script src="https://kithuatlaptrinh.ddns.net/js/compiler.js"></script>
+        <script src="https://kithuatlaptrinh.ddns.net/wasm/compiler.js"></script>
 		<script src="dist/monaco-editor-0.46.0/package/min/vs/loader.js"></script>
 		<script>
            
@@ -124,7 +124,8 @@
                 await updateUI();
                 const compiler = await Module({
                     print:    v => document.getElementById("consoleout").value += v + '\n',
-                    printErr: v => document.getElementById("consoleout").value += v + '\n'
+                    printErr: v => document.getElementById("consoleout").value += v + '\n',
+                    locateFile: v => v === "compiler.wasm" ? "https://kithuatlaptrinh.ddns.net/wasm/compiler.wasm" : v
                 });
 
                 for (const v of [
