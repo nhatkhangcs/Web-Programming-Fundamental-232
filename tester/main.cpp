@@ -59,6 +59,7 @@ Task3Ret runTask3(TestCase test, Task_t Task) {
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <unordered_map>
 
 class Password {
 public:
