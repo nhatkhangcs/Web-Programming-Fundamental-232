@@ -9,9 +9,7 @@ onmessage = async (ev) => {
         "expected",
         "got"
     ];
-    fileIDs.forEach(v => {
-        if (v) postMessage([v, "set", ""]);
-    });
+    fileIDs.forEach(v => { v && postMessage([v, "set", ""]); });
     const fileContents = ['', '', '', '', '', ''];
     const fileOffsets = [0, 0, 0, 0, 0, 0];
     let memory;
