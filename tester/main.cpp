@@ -262,7 +262,7 @@ TestCase45 gentask45() {
 }
 
 int main() {
-    int const numtestcase = 100;
+    int const numtestcase = 100000;
     std::cout << "Running task 1..." << std::endl;
     for (int i = 0; i < numtestcase; ++i) {
         const auto test = gentask123();
