@@ -27,7 +27,10 @@ onmessage = async (ev) => {
             },
             emscripten_notify_memory_growth: (dummy) => {
                 memory = wasm_instantiate.instance.exports.memory;
+            },
+            __throw_exception_with_stack_trace: (unwind_trace) => {
             }
+            
         },
         wasi_snapshot_preview1: {
             proc_exit: (code) => {
