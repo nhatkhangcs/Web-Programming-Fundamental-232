@@ -12,6 +12,7 @@ onmessage = async (ev) => {
     fileIDs.forEach(v => { v && postMessage([v, "set", ""]); });
     const fileContents = ['', '', '', '', '', ''];
     const fileOffsets = [0, 0, 0, 0, 0, 0];
+    let wasm_instantiate;
     let memory;
     const textDecoder = new TextDecoder();
     const imports = {
@@ -23,6 +24,9 @@ onmessage = async (ev) => {
                     postMessage([fileIDs[fd], "set", ""]);
                 }
                 return 0;
+            },
+            emscripten_notify_memory_growth: (dummy) => {
+                memory = wasm_instantiate.instance.exports.memory;
             }
         },
         wasi_snapshot_preview1: {
@@ -102,9 +106,9 @@ onmessage = async (ev) => {
         }
     };
     try {
-        const { instance } = await WebAssembly.instantiate(wasm_binary, imports);
-        memory = instance.exports.memory;
-        instance.exports._start();
+        wasm_instantiate = await WebAssembly.instantiate(wasm_binary, imports);
+        memory = wasm_instantiate.instance.exports.memory;
+        wasm_instantiate.instance.exports._start();
     } catch (e) {
         postMessage([fileIDs[1], "final", `\nExited with code: ${e}`]);
     } finally {
